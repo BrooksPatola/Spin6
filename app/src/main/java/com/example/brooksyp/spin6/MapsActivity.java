@@ -60,9 +60,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng toronto = new LatLng(43.761539, -79.411079);
+        LatLng toronto = new LatLng(43.642604, -79.387117);
         mMap.addMarker(new MarkerOptions().position(toronto).title("Marker in Toronto"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 14));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 16));
 
         // mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
         new JSONParser().execute();
@@ -151,6 +151,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(Double.parseDouble(lat[i]), Double.parseDouble(lng[i])))
                 .title(stationName[i])
+                        .snippet("Bikes:" + bikesAv[i] + " " + "Docks:" + docksAv[i] )
                 .icon(BitmapDescriptorFactory.fromResource(myImage)));
 
 
