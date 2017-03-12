@@ -64,8 +64,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(toronto).title("Marker in Toronto"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 16));
 
-        // mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+
         new JSONParser().execute();
+        mMap.setInfoWindowAdapter(new BikeShareWindowAdapter());
     }
 
     public class JSONParser extends AsyncTask<Void, Void, Void> {
@@ -76,6 +77,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String[] stationName;
         String[] bikesAv;
         String[] docksAv;
+        String[] totalDocks;
+        String[] inService;
 
         @Override
         protected void onPreExecute() {
@@ -107,25 +110,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     stationName = new String[numStations];
                     bikesAv = new String[numStations];
                     docksAv = new String[numStations];
-                    stations = new ArrayList<Station>();
+                    totalDocks = new String[numStations];
+                    inService =  new String[numStations];
+                                    //stations = new ArrayList<Station>();
+
                     // looping through all stations
                     for (int i = 0; i < StationBeanList.length(); i++) {
 
                         JSONObject mStation = StationBeanList.getJSONObject(i);
 
-                        String id = mStation.getString("id");
+                        //String id = mStation.getString("id");
                         String StationName = mStation.getString("stationName");
                         String latitude = mStation.getString("latitude");
                         String longitude = mStation.getString("longitude");
                         String docksAvail = mStation.getString("availableDocks");
                         String bikesAvail = mStation.getString("availableBikes");
+                        String totalDocksAvail = mStation.getString("totalDocks");
+                        String inServ = mStation.getString("statusValue");
 
                         stationName[i] = StationName;
                         lat[i] = latitude;
                         lng[i] = longitude;
                         docksAv[i] = docksAvail;
                         bikesAv[i] = bikesAvail;
-
+                        totalDocks[i] = totalDocksAvail;
+                        inService[i] = inServ;
 
                     }
 
@@ -151,12 +160,66 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(Double.parseDouble(lat[i]), Double.parseDouble(lng[i])))
                 .title(stationName[i])
-                        .snippet("Bikes:" + bikesAv[i] + " " + "Docks:" + docksAv[i] )
+                        .snippet(//"Bikes:
+                               // + " "
+                               // + "Docks:"
+                                  bikesAv[i] + ","
+                                          +docksAv[i] + ","
+                                          +totalDocks[i] + ","
+                                          +inService[i]
+
+                        )
+
                 .icon(BitmapDescriptorFactory.fromResource(myImage)));
 
 
             }
-            Station.populateStations(stations);
+         //   Station.populateStations(stations);
         }
-    }
-}
+
+    } // end of JSONParser
+
+    public class BikeShareWindowAdapter implements GoogleMap.InfoWindowAdapter{
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+
+        View myBikeShareView = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+
+
+        @Override
+        public View getInfoContents(Marker marker){
+
+            String Name = marker.getTitle();
+            String Snip = marker.getSnippet();
+
+            TextView tvTitle = (TextView) myBikeShareView.findViewById(R.id.station_name);
+            TextView numBikes = (TextView) myBikeShareView.findViewById(R.id.bikes_avail);
+            TextView numDocks = (TextView) myBikeShareView.findViewById(R.id.docks_avail);
+            TextView totDocks = (TextView) myBikeShareView.findViewById(R.id.total_docks);
+            TextView inServ = (TextView) myBikeShareView.findViewById(R.id.in_service);
+
+            String[] SnipInfo =  Snip.split(",");
+
+            String myBikes = SnipInfo[0];
+            String myDocks = SnipInfo[1];
+            String myTotalDocks = SnipInfo[2];
+            String myService = SnipInfo[3];
+
+
+            tvTitle.setText(Name);
+            numBikes.setText(myBikes);
+            numDocks.setText(myDocks);
+            totDocks.setText(myTotalDocks);
+            inServ.setText(myService);
+
+            return myBikeShareView;
+        }
+
+
+
+    } // end of BikeShareWindowAdapter
+
+} // end of MapsActivity
