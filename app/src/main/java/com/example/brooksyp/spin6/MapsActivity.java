@@ -1,18 +1,39 @@
 package com.example.brooksyp.spin6;
 
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    private LayoutInflater Minflater;
+
+    List<Station> stations = new ArrayList<Station>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +60,102 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng toronto = new LatLng(43.761539, -79.411079);
+        mMap.addMarker(new MarkerOptions().position(toronto).title("Marker in Toronto"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 14));
+
+        // mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+        new JSONParser().execute();
+    }
+
+    public class JSONParser extends AsyncTask<Void, Void, Void> {
+
+        int numStations;
+        String[] lat;
+        String[] lng;
+        String[] stationName;
+        String[] bikesAv;
+        String[] docksAv;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(MapsActivity.this, "Json Data is downloading", Toast.LENGTH_LONG).show();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+
+
+            HttpHandler sh = new HttpHandler();
+            // Making a request to url and getting response
+            String url = "https://feeds.bikesharetoronto.com/stations/stations.json";
+            String jsonStr = sh.makeServiceCall(url);
+
+
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+
+                    // Getting JSON Array node
+                    JSONArray StationBeanList = jsonObj.getJSONArray("stationBeanList");
+
+                    numStations = StationBeanList.length();
+                    lat = new String[numStations];
+                    lng = new String[numStations];
+                    stationName = new String[numStations];
+                    bikesAv = new String[numStations];
+                    docksAv = new String[numStations];
+                    stations = new ArrayList<Station>();
+                    // looping through all stations
+                    for (int i = 0; i < StationBeanList.length(); i++) {
+
+                        JSONObject mStation = StationBeanList.getJSONObject(i);
+
+                        String id = mStation.getString("id");
+                        String StationName = mStation.getString("stationName");
+                        String latitude = mStation.getString("latitude");
+                        String longitude = mStation.getString("longitude");
+                        String docksAvail = mStation.getString("availableDocks");
+                        String bikesAvail = mStation.getString("availableBikes");
+
+                        stationName[i] = StationName;
+                        lat[i] = latitude;
+                        lng[i] = longitude;
+                        docksAv[i] = docksAvail;
+                        bikesAv[i] = bikesAvail;
+
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            int myImage;
+
+            for (int i = 0; i < numStations; i++){
+
+                myImage = R.drawable.mymarker;
+                mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(Double.parseDouble(lat[i]), Double.parseDouble(lng[i])))
+                .title(stationName[i])
+                .icon(BitmapDescriptorFactory.fromResource(myImage)));
+
+
+            }
+            Station.populateStations(stations);
+        }
     }
 }
