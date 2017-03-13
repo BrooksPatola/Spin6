@@ -1,11 +1,16 @@
 package com.example.brooksyp.spin6;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +31,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.brooksyp.spin6.R.drawable.bikesharelogo;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -183,32 +190,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         @Override
         public View getInfoWindow(Marker marker) {
+
+            //View v = getLayoutInflater().inflate(R.layout.custinfowindow_, null);
+            //return v;
+
             return null;
+
         }
-
-        View myBikeShareView = getLayoutInflater().inflate(R.layout.custom_info_window, null);
-
-
         @Override
         public View getInfoContents(Marker marker){
+
+
+            View myBikeShareView = getLayoutInflater().inflate(R.layout.custom_info_window, null);
 
             String Name = marker.getTitle();
             String Snip = marker.getSnippet();
 
             TextView tvTitle = (TextView) myBikeShareView.findViewById(R.id.station_name);
-            TextView numBikes = (TextView) myBikeShareView.findViewById(R.id.bikes_avail);
-            TextView numDocks = (TextView) myBikeShareView.findViewById(R.id.docks_avail);
+           TextView numBikes = (TextView) myBikeShareView.findViewById(R.id.bikes_avail);
+           TextView numDocks = (TextView) myBikeShareView.findViewById(R.id.docks_avail);
             TextView totDocks = (TextView) myBikeShareView.findViewById(R.id.total_docks);
             TextView inServ = (TextView) myBikeShareView.findViewById(R.id.in_service);
+            //ImageView setImg = (ImageView) myBikeShareView.findViewById(R.id.Logo);
 
-            String[] SnipInfo =  Snip.split(",");
+           // String imageString = "Logo";
+            //int resID = getResources().getIdentifier(imageString, "Logo", ".com.example.brooksyp.spin6");
+            //ImageView image = (ImageView) findViewById(resID);
+
+            String[] SnipInfo = Snip.split(",");
 
             String myBikes = SnipInfo[0];
             String myDocks = SnipInfo[1];
             String myTotalDocks = SnipInfo[2];
             String myService = SnipInfo[3];
 
-
+            //setImg.setImageResource(resID);
             tvTitle.setText(Name);
             numBikes.setText(myBikes);
             numDocks.setText(myDocks);
