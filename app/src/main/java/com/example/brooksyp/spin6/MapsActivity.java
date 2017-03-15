@@ -38,9 +38,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
-    private LayoutInflater Minflater;
+    //private LayoutInflater Minflater;
 
-    List<Station> stations = new ArrayList<Station>();
+    //List<Station> stations = new ArrayList<Station>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,17 +191,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public View getInfoWindow(Marker marker) {
 
-            //View v = getLayoutInflater().inflate(R.layout.custinfowindow_, null);
-            //return v;
+           // View v = getLayoutInflater().inflate(R.layout.cus, null);
+           // return v;
 
-            return null;
+           return null;
 
         }
         @Override
         public View getInfoContents(Marker marker){
 
-
-            View myBikeShareView = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+            View myBikeShareView = getLayoutInflater().inflate(R.layout.customgoogleinfowindow, null);
 
             String Name = marker.getTitle();
             String Snip = marker.getSnippet();
@@ -211,11 +210,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
            TextView numDocks = (TextView) myBikeShareView.findViewById(R.id.docks_avail);
             TextView totDocks = (TextView) myBikeShareView.findViewById(R.id.total_docks);
             TextView inServ = (TextView) myBikeShareView.findViewById(R.id.in_service);
-            //ImageView setImg = (ImageView) myBikeShareView.findViewById(R.id.Logo);
+            ImageView image = (ImageView) myBikeShareView.findViewById(R.id.logo2);
+            Resources resources = getResources();
+            image.setImageDrawable(resources.getDrawable(R.drawable.bikesharelogo));
 
-           // String imageString = "Logo";
-            //int resID = getResources().getIdentifier(imageString, "Logo", ".com.example.brooksyp.spin6");
-            //ImageView image = (ImageView) findViewById(resID);
 
             String[] SnipInfo = Snip.split(",");
 
@@ -224,7 +222,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String myTotalDocks = SnipInfo[2];
             String myService = SnipInfo[3];
 
-            //setImg.setImageResource(resID);
             tvTitle.setText(Name);
             numBikes.setText(myBikes);
             numDocks.setText(myDocks);
