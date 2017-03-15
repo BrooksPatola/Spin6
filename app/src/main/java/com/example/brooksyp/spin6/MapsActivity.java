@@ -68,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Sydney and move the camera
         LatLng toronto = new LatLng(43.642604, -79.387117);
-        mMap.addMarker(new MarkerOptions().position(toronto).title("Marker in Toronto"));
+       // mMap.addMarker(new MarkerOptions().position(toronto).title("Marker in Toronto"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 16));
 
 
@@ -90,7 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(MapsActivity.this, "Json Data is downloading", Toast.LENGTH_LONG).show();
+            Toast.makeText(MapsActivity.this, "Gathering Bike Stations Info", Toast.LENGTH_LONG).show();
 
         }
 
@@ -163,7 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             for (int i = 0; i < numStations; i++){
 
-                myImage = R.drawable.mymarker;
+                myImage = R.drawable.custompin;
                 mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(Double.parseDouble(lat[i]), Double.parseDouble(lng[i])))
                 .title(stationName[i])

@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="Bikes:"
+            android:text="#Bikes:"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView10"
-            android:text="Docks:"
+            android:text="#Docks:"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/docks"
-            android:text="AllDocks:"
+            android:text="Total Docks:"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -100,10 +100,10 @@
             android:id="@+id/in_service"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/TotalDocks"
-            android:layout_toEndOf="@+id/TotalDocks"
             android:text="TextView"
             android:textColor="#0099ff"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:layout_below="@+id/TotalDocks"
+            android:layout_toEndOf="@+id/docks" />
     </RelativeLayout>
 </LinearLayout>
